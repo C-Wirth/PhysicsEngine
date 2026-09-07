@@ -20,3 +20,5 @@ add_executable(
         Entry
         examples/Entry.cc
 )
+
+target_link_libraries(Entry PRIVATE PhysicsEngine)
