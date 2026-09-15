@@ -1,7 +1,7 @@
-#include "WorldSim.hpp"
+#include "simulation/WorldSim.hpp"
 
 
-WorldSim::WorldSim(const WorldConfig config)
+WorldSim::WorldSim(const WorldConfig& config)
     : timestep_(config.timestep)
 
 {
