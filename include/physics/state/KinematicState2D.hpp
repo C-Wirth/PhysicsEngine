@@ -40,7 +40,7 @@ private:
 };
 
 
-static auto print(std::ostream& stream, const KinematicState2D& state, const size_t depth) -> std::ostream&
+inline auto print(std::ostream& stream, const KinematicState2D& state, const size_t depth) -> std::ostream&
 {
     stream << Indent(depth) << "Kinematics: [\n";
     stream << Indent(depth + 1) <<  "Position: ";

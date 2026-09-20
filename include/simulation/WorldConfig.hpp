@@ -1,26 +1,24 @@
-//
-// Created by colby on 9/7/26.
-//
-
 #pragma once
 
 #include <iomanip>
+#include <memory>
 #include <ostream>
 #include <vector>
+#include <ranges>
 
 #include "util/IndentStream.hpp"
 #include "physics/particles/Particle2D.hpp"
+#include "physics/particles/Entity.hpp"
 
 constexpr double STEPS_PER_SECOND = 60.0;
 
 struct WorldConfig{
 
         double timestep = 1.0 / STEPS_PER_SECOND; // Frequency
+        std::vector<std::unique_ptr<Entity>> entities;
 
-        std::vector<Particle2D> particles;
-
-        explicit WorldConfig(std::vector<Particle2D> particles)
-            : particles(std::move(particles))
+        explicit WorldConfig(std::vector<std::unique_ptr<Entity>> entities)
+            : entities(std::move(entities))
         {
         }
 
@@ -32,12 +30,12 @@ inline auto print(std::ostream& stream, const WorldConfig& config, const std::si
     stream << Indent(depth) << "WorldConfig: {\n";
     stream << Indent(depth + 1) << "timestep: 1.0 / "
             << std::fixed << std::setprecision(1) << STEPS_PER_SECOND << ",\n";
-    stream << Indent(depth + 1) << "Particle 2D configs [\n";
+    stream << Indent(depth + 1) << "Particle configs [\n";
 
-    for (std::size_t i = 0 ; i < config.particles.size(); i++) {
-        print(stream, config.particles[i], depth + 2, i);
+    for (std::size_t i = 0 ; i < config.entities.size(); i++) {
+        config.entities[i]->print(stream, depth + 2);
 
-        if (i != config.particles.size() -1)
+        if (i != config.entities.size() -1)
         {
             stream << ",";
         }
