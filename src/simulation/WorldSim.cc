@@ -1,13 +1,16 @@
 #include "simulation/WorldSim.hpp"
 
+#include <utility>
+#include "simulation/WorldConfig.hpp"
 
-WorldSim::WorldSim(const WorldConfig& config)
+
+WorldSim::WorldSim(WorldConfig config)
     :
-    timestep_(config.timestep)
+    config_(std::move(config))
 {
 }
 
-auto WorldSimStep() -> void
+auto WorldSim::WorldSimStep() -> void
 {
         // 1. determine forces
 

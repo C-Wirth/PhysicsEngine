@@ -6,6 +6,7 @@ Checks: >
   -portability-avoid-pragma-once,
   readability-*,
   -readability-identifier-length,
+  -readability-magic-numbers,
   modernize-*
 
 WarningsAsErrors: ''

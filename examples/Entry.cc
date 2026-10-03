@@ -36,12 +36,9 @@ auto main() -> int
         Geometry2D(2.0, 2.0)
     ));
 
-    const WorldConfig config(std::move(particles));
+    WorldSim world(WorldConfig(std::move(particles)));
 
-
-    std::cout << config << "\n";
-
-    WorldSim world(config);
+    std::cout << world.GetConfig();
 
 
     return 0;

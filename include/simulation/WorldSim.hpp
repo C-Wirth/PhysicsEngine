@@ -7,14 +7,11 @@
 class WorldSim
 {
 public:
+    explicit WorldSim(WorldConfig config);
 
-    explicit WorldSim(const WorldConfig& config);
-
-    [[nodiscard]] auto GetConfig() const -> WorldConfig;
-
-    auto Step() -> void;
-
+    [[nodiscard]] auto GetConfig() const -> const WorldConfig& { return config_; }
+    auto WorldSimStep() -> void;
 
 private:
-    double timestep_;
+    const WorldConfig config_;
 };

@@ -3,6 +3,12 @@
 #include <ostream>
 
 class Entity
+/**
+ *
+ * Virtual class for all entities
+ *
+ */
+
 {
 public:
     virtual ~Entity() = default;
