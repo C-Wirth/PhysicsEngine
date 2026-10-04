@@ -2,7 +2,9 @@
 
 #include <vector>
 
+#include "physics/particles/Entity.hpp"
 #include "simulation/WorldConfig.hpp"
+
 
 class WorldSim
 {
@@ -13,5 +15,5 @@ public:
     auto WorldSimStep() -> void;
 
 private:
-    const WorldConfig config_;
+    WorldConfig config_;
 };

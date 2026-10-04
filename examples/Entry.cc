@@ -14,7 +14,7 @@
 
 auto main() -> int
 {
-    std::vector<std::unique_ptr<Entity>> particles;
+    std::vector<std::unique_ptr<Entity<2>>> particles;
 
     particles.push_back(std::make_unique<Particle2D>(
         KinematicState2D(

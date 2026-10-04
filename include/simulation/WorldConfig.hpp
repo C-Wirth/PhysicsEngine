@@ -7,7 +7,6 @@
 #include <ranges>
 
 #include "util/IndentStream.hpp"
-#include "physics/particles/Particle2D.hpp"
 #include "physics/particles/Entity.hpp"
 
 constexpr double STEPS_PER_SECOND = 60.0;
@@ -15,9 +14,9 @@ constexpr double STEPS_PER_SECOND = 60.0;
 struct WorldConfig{
 
         double timestep = 1.0 / STEPS_PER_SECOND; // Frequency
-        std::vector<std::unique_ptr<Entity>> entities;
+        std::vector<std::unique_ptr<Entity<2>>> entities;
 
-        explicit WorldConfig(std::vector<std::unique_ptr<Entity>> entities)
+        explicit WorldConfig(std::vector<std::unique_ptr<Entity<2>>> entities)
             : entities(std::move(entities))
         {
         }

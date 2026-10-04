@@ -21,7 +21,13 @@ public:
      *
      * @param components Initial vector components.
      */
-    explicit VectorM(std::array<double, N> components);
+    explicit VectorM(std::array<double, N> components) : components_(components) {}
+
+
+    /**
+     * @brief Constructs an empty VectorM
+     */
+    VectorM() : components_{} {}
 
     auto operator[](std::size_t i) -> double&;
     auto operator[](std::size_t i) const -> const double&;
@@ -29,13 +35,6 @@ public:
 private:
     std::array<double, N> components_;
 };
-
-template <std::size_t N>
-VectorM<N>::VectorM(std::array<double, N> components)
-    : components_(components)
-{
-}
-
 
 template <std::size_t N>
 auto VectorM<N>::operator[](std::size_t i) -> double&
@@ -72,6 +71,20 @@ auto operator+(const VectorM<N>& l,
 
 
 /**
+ *
+ * @tparam N Number of components in the vectors.
+ * @param l Left-hand vector.
+ * @param r Right-hand vector.
+ * @return The '+' operator of the two vectors
+ */
+template <std::size_t N>
+auto operator+=(VectorM<N>& l, const VectorM<N>& r) -> VectorM<N>&
+{
+    l = l + r;
+    return l;
+}
+
+/**
  * @brief Adds two vectors component-wise.
  *
  * @tparam N Number of components in the vectors.
@@ -106,7 +119,7 @@ auto operator*(const VectorM<N>& v,
     VectorM<N> result;
     for(std::size_t i = 0 ; i < N ; i++)
     {
-        result[i] = v * scalar;
+        result[i] = v[i] * scalar;
     }
 
     return result;
@@ -152,5 +165,5 @@ auto print(std::ostream& stream, VectorM<N> v, const size_t depth) -> std::ostre
 template<std::size_t N>
  auto operator<<(std::ostream& stream, const VectorM<N>& v) -> std::ostream&
 {
-    return print(&stream, v, 0);
+    return print(stream, v, 0);
 }

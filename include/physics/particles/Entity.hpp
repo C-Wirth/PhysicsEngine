@@ -2,15 +2,27 @@
 
 #include <ostream>
 
-class Entity
-/**
- *
- * Virtual class for all entities
- *
- */
+#include "math/VectorM.hpp"
 
+#include "physics/physical/PhysicalProperties.hpp"
+
+
+template <std::size_t N>
+class Entity
+
+/**
+ * Virtual base class for all entities
+ */
 {
+
 public:
     virtual ~Entity() = default;
+
+
     virtual auto print(std::ostream& stream, std::size_t depth) const -> std::ostream& = 0;
+
+    virtual auto accumulateForce(const VectorM<N>& force) -> void = 0;
+    virtual auto resetAccumulatedForces() -> void = 0;
+
+    [[nodiscard]] virtual auto getMass() const -> double = 0;
 };
