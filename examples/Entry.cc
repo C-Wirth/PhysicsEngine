@@ -38,7 +38,14 @@ auto main() -> int
 
     WorldSim world(WorldConfig(std::move(particles)));
 
-    std::cout << world.GetConfig();
+    for (std::size_t i = 0; i <= 60; i++)
+    {
+        if (i % 10 == 0)
+        {
+            std::cout << world.GetConfig();
+        }
+            world.WorldSimStep();
+    }
 
 
     return 0;

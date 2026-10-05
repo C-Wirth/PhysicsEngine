@@ -14,18 +14,18 @@
 
 class Particle2D : public Entity<2>
 {
-
 public:
     Particle2D(
         const KinematicState2D& state,
         const PhysicalProperties& properties,
         const Geometry2D& geometry
     )
-    : state_(state), properties_(properties), geometry_(geometry)
+        : state_(state), properties_(properties), geometry_(geometry)
     {
     }
 
-    [[nodiscard]] auto state() const -> const KinematicState2D& { return state_; }
+    [[nodiscard]] auto state() const -> const KinematicState2D& override { return state_; }
+    auto state() -> KinematicState2D& override { return state_; }
     [[nodiscard]] auto properties() const -> const PhysicalProperties& { return properties_; }
     [[nodiscard]] auto geometry() const -> const Geometry2D& { return geometry_; }
 
@@ -36,6 +36,11 @@ public:
     auto accumulateForce(const VectorM<2>& force) -> void override
     {
         accumulatedForces_ += force;
+    }
+
+    auto calculateAcceleration() -> void override
+    {
+        state_.updateAcceleration(accumulatedForces_ / getMass());
     }
 
     auto resetAccumulatedForces() -> void override

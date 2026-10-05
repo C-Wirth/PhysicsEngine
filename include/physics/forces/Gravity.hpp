@@ -7,7 +7,7 @@
 class Gravity2D : public Force<2>
 {
 public:
-    Gravity2D(
+    explicit Gravity2D(
         const VectorM<2> f_gravity = VectorM<2>(std::array<double, 2>{0.0, -9.8})
     )
         : f_gravity_(f_gravity)

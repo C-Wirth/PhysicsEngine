@@ -32,6 +32,21 @@ struct KinematicState2D
         return acceleration_;
     }
 
+    auto updateAcceleration(const VectorM<2> acceleration_new) -> void
+    {
+        acceleration_ = acceleration_new;
+    }
+
+
+    auto updateVelocity(const VectorM<2> velocity_new) -> void
+    {
+        velocity_ = velocity_new;
+    }
+
+    auto updatePosition(const VectorM<2> position_new) -> void
+    {
+        position_ = position_new;
+    }
 
 private:
     VectorM<2> position_;
@@ -43,18 +58,18 @@ private:
 inline auto print(std::ostream& stream, const KinematicState2D& state, const size_t depth) -> std::ostream&
 {
     stream << Indent(depth) << "Kinematics: [\n";
-    stream << Indent(depth + 1) <<  "Position: ";
+    stream << Indent(depth + 1) << "Position: ";
     print(stream, state.position(), 0);
-    stream << ",\n" << Indent(depth + 1) <<  "Velocity: ";
+    stream << ",\n" << Indent(depth + 1) << "Velocity: ";
     print(stream, state.velocity(), 0);
-    stream << ",\n" << Indent(depth + 1) <<  "Acceleration: ";
+    stream << ",\n" << Indent(depth + 1) << "Acceleration: ";
     print(stream, state.acceleration(), 0);
     stream << "\n" << Indent(depth) << "]\n";
 
     return stream;
 }
 
-inline auto operator<<(std::ostream& stream, const KinematicState2D& state) -> std::ostream& {
+inline auto operator<<(std::ostream& stream, const KinematicState2D& state) -> std::ostream&
+{
     return print(stream, state, 0);
 }
-

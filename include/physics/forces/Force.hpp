@@ -1,7 +1,8 @@
-#include <vector>
-#include "physics/particles/Entity.hpp"
-
 #pragma once
+
+#include <vector>
+
+#include "physics/particles/Entity.hpp"
 
 template <std::size_t N>
 class Force

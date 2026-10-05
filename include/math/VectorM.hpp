@@ -125,6 +125,27 @@ auto operator*(const VectorM<N>& v,
     return result;
 }
 
+
+/**
+ * @brief Vector-scalar division
+ * @tparam N Number of components in the vector
+ * @param v the vector
+ * @param scalar the scalar, a double
+ * @return the new vector
+ */
+template <std::size_t N>
+auto operator/(const VectorM<N>& v,
+               double scalar) -> VectorM<N>
+{
+    VectorM<N> result;
+    for(std::size_t i = 0 ; i < N ; i++)
+    {
+        result[i] = v[i] / scalar;
+    }
+
+    return result;
+}
+
 /**
  * @brief dot product between two vectors
  *
