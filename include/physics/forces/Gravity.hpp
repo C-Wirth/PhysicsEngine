@@ -15,20 +15,17 @@ public:
     }
 
 
-/**
- * f = ma
- * a = g = 9.8 m/s^2
- * → f = m * g
- */
-auto applyForce(std::vector<std::unique_ptr<Entity<2>>>& entities) -> void override    {
-
-
-
+    /**
+     * f = ma
+     * a = g = 9.8 m/s^2
+     * → f = m * g
+     */
+    auto applyForce(std::vector<std::unique_ptr<Entity<2>>>& entities) -> void override
+    {
         for (auto& e : entities)
         {
             e->accumulateForce(f_gravity_ * e->getMass());
         }
-
     }
 
 private:
