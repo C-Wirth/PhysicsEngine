@@ -142,7 +142,6 @@ static void test_vector_addition()
 }
 
 
-
 static void test_mutate_in_place_vector_addition()
 {
     VectorM v1(std::array<double, 3>{1.0, 2.0, 3.0});
@@ -193,6 +192,126 @@ static void test_vector_scalar_addition_overload()
     assert(v3==v4);
 }
 
+
+static void test_vector_subtraction()
+{
+    VectorM v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2{};
+
+    VectorM<3> v3 = v1 - v2;
+
+    assert(v1==v3);
+    v3 = v1 - v1;
+
+    assert(v3==v2);
+}
+
+
+static void test_mutate_inplace_vector_subtraction()
+{
+    VectorM<3> v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2(std::array<double, 3>{0.0, 0.0, 0.0});
+    v1 -= v2;
+    assert(v1==v1);
+
+    v1 -= v1;
+    assert(v1==v2);
+}
+
+
+static void test_mutate_inplace_scalar_subtraction()
+{
+    VectorM<3> v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2(std::array<double, 3>{-1.0, 0.0, 1.0});
+
+    v1 += 0;
+    assert(v1==v1);
+
+    v1 -= 2;
+    assert(v1==v2);
+}
+
+static void test_vector_scalar_subtraction()
+{
+    VectorM<3> v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2(std::array<double, 3>{-1.0, 0.0, 1.0});
+
+    VectorM v3 = v1 - 0;
+    assert(v1==v3);
+
+    VectorM v4 = v1 - 2;
+    assert(v2==v4);
+}
+
+static void test_inplace_vector_scalar_multiplication()
+{
+    VectorM<3> v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2(std::array<double, 3>{2.0, 4.0, 6.0});
+    VectorM<3> v3{};
+
+    v1 *= 1;
+    assert(v1==v1);
+    v1 *= 2;
+    assert(v1==v2);
+    v1 *= 0;
+    assert(v1==v3);
+}
+
+
+static void test_vector_scalar_multiplication()
+{
+    VectorM<3> v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM<3> v2(std::array<double, 3>{2.0, 4.0, 6.0});
+    VectorM<3> v3{};
+
+    auto v4 = v1 * 2;
+    assert(v2==v4);
+
+    auto v5 = v4 * 0;
+    assert(v5==v3);
+}
+
+static void test_vector_scalar_division()
+{
+    VectorM v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM v2(std::array<double, 3>{-0.5, -1.0, -1.5});
+    VectorM v3(std::array<double, 3>{1.0, 2.0, 3.0});
+
+    auto v4 = v1 / (1.0);
+    assert(v3==v4);
+
+    auto v5 = v1 / (-2.0);
+    assert(v5==v2);
+}
+
+static void test_inplace_vector_scalar_division()
+{
+    VectorM v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM v2(std::array<double, 3>{2.0, 4.0, 6.0});
+    VectorM v3(std::array<double, 3>{1.0, 2.0, 3.0});
+
+    v1 /= 1.0;
+    assert(v1==v3);
+
+    v1 /= 0.5;
+    assert(v1==v2);
+}
+
+static void test_vector_dot_product()
+{
+    VectorM v1(std::array<double, 3>{1.0, 2.0, 3.0});
+    VectorM v2(std::array<double, 3>{-2.0, 4.0, 6.0});
+    VectorM<3> v3{};
+
+    auto dp1 = v1.dot(v2);
+
+    assert(dp1==24.0);
+
+    auto dp2 = v1.dot(v3);
+    assert(dp2==0);
+}
+
+
 int main()
 {
     test_element_access();
@@ -207,4 +326,13 @@ int main()
     test_mutate_in_place_vector_addition();
     test_inplace_vector_scalar_addition_overload();
     test_vector_scalar_addition_overload();
+    test_vector_subtraction();
+    test_mutate_inplace_vector_subtraction();
+    test_mutate_inplace_scalar_subtraction();
+    test_vector_scalar_subtraction();
+    test_inplace_vector_scalar_multiplication();
+    test_vector_scalar_multiplication();
+    test_vector_scalar_division();
+    test_inplace_vector_scalar_division();
+    test_vector_dot_product();
 }

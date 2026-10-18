@@ -106,7 +106,7 @@ public:
     {
         for (std::size_t idx = 0; idx < N; idx++)
         {
-            a_.at(idx) = a_.at(idx) + d;
+            (*this)[idx] = (*this)[idx] + d;
         }
     }
 
@@ -120,7 +120,7 @@ public:
         VectorM v{};
         for (std::size_t idx = 0; idx < N; idx++)
         {
-            v[idx] = a_.at(idx) + d;
+            v[idx] = (*this)[idx] + d;
         }
         return v;
     }
@@ -133,7 +133,13 @@ public:
      */
     auto operator-(VectorM o) -> VectorM
     {
-        //TODO  implement me
+        VectorM<N> v{};
+
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            v[idx] = (*this)[idx] - o[idx];
+        }
+        return v;
     }
 
 
@@ -143,18 +149,10 @@ public:
      */
     auto operator-=(VectorM o) -> void
     {
-        //TODO  implement me
-    }
-
-
-    /**
-     * creates a new Vector from vector-scalar subtraction
-     * @param d the scalar
-     * @return the new Vector
-     */
-    auto operator-=(double d) -> void
-    {
-        //TODO  implement me
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            (*this)[idx] = (*this)[idx] - o[idx];
+        }
     }
 
 
@@ -162,9 +160,97 @@ public:
      * mutate-in-place vector-scalar subtraction
      * @param d the scalar
      */
-    auto operator-(double d) -> void
+    auto operator-=(double d) -> void
     {
-        //TODO  implement me
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            (*this)[idx] = (*this)[idx] - d;
+        }
+    }
+
+    /**
+     * mutate in place vector-scalar subtraction
+     * @param d the scalar
+     */
+    auto operator-(double d) -> VectorM
+    {
+        VectorM<N> v{};
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            v[idx] = (*this)[idx] - d;
+        }
+        return v;
+    }
+
+    /**
+     * mutate in-place vector-scalar multiplication
+     * @param d the scalar
+     */
+    auto operator*=(double d) -> void
+    {
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            (*this)[idx] = (*this)[idx] * d;
+        }
+    }
+
+    /**
+     * vector-scalar multiplication
+     * @param d the scalar
+     * @return the new Vector
+     */
+    auto operator*(double d) -> VectorM
+    {
+        VectorM<3> v{};
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            v[idx] = (*this)[idx] * d;
+        }
+        return v;
+    }
+
+    /**
+     * vector-scalar division
+     * @param d the scalar
+     * @return the new Vector
+     */
+    auto operator/(double d) -> VectorM
+    {
+        VectorM<3> v{};
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            v[idx] = (*this)[idx] / d;
+        }
+        return v;
+    }
+
+    /**
+     * in-place vector-scalar division
+     * @param d the scalar
+     */
+    auto operator/=(double d) -> void
+    {
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            (*this)[idx] = (*this)[idx] / d;
+        }
+    }
+
+
+    /**
+     * vector dot product
+     * @param v the other vector
+     * @return the dot product of two vectors
+     */
+    auto dot(VectorM v) -> double
+    {
+        auto result = 0.0;
+
+        for (std::size_t idx = 0; idx < N; idx++)
+        {
+            result += (*this)[idx] * v[idx];
+        }
+        return result;
     }
 
 private:
