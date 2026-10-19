@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <array>
+#include <cassert>
 
 template <std::size_t N>
 class VectorM
@@ -239,18 +240,25 @@ public:
 
     /**
      * vector dot product
-     * @param v the other vector
+     * @param o the other vector
      * @return the dot product of two vectors
      */
-    auto dot(VectorM v) -> double
+    auto dot(VectorM o) -> double
     {
         auto result = 0.0;
 
         for (std::size_t idx = 0; idx < N; idx++)
         {
-            result += (*this)[idx] * v[idx];
+            result += (*this)[idx] * o[idx];
         }
         return result;
+    }
+
+    auto cross(VectorM o) -> double
+    {
+        static_assert(N == 2, "Cross product only implemented for 2D vectors");
+        //cross product 2D: z = (a_1 * b_2) - (a_2 * b_1)
+        return (*this)[0] * o[1] - (*this)[1] * o[0];
     }
 
 private:

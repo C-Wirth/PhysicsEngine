@@ -312,6 +312,19 @@ static void test_vector_dot_product()
 }
 
 
+static void test_vector_cross_product()
+{
+    VectorM v1(std::array<double, 2>{1.0, 2.0});
+    const VectorM v2(std::array<double, 2>{-1.0, 1.0});
+
+    const auto result = v1.cross(v2);
+
+    assert(result==3.0);
+
+
+}
+
+
 int main()
 {
     test_element_access();
@@ -335,4 +348,5 @@ int main()
     test_vector_scalar_division();
     test_inplace_vector_scalar_division();
     test_vector_dot_product();
+    test_vector_cross_product();
 }
