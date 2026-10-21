@@ -11,5 +11,5 @@ cmake --build build/
 
 How to Test
 ```
-ctest --test-dir build
+ctest --test-dir build --output-on-failure
 ```

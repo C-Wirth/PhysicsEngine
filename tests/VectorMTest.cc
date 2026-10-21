@@ -2,6 +2,7 @@
 #include <cassert>
 #include <typeinfo>
 #include <stdexcept>
+
 #include "math/VectorM.hh"
 
 /**
