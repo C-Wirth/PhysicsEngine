@@ -2,7 +2,7 @@
 #include <array>
 
 #include "math/VectorM.hh"
-#include "physics/KinematicState2D.hh"
+#include "../include/physics/2D/KinematicState2D.hh"
 
 static void test_ks2d_constructor()
 {

@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Main entrypoint
 add_executable(entry
         src/main.cc
+        src/simulation/WorldSim.cc
 )
 
 target_include_directories(entry PRIVATE include)

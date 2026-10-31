@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
-#include "math/VectorM.hh"
-#include "physics/KinematicState2D.hh"
 
-class Particle2D
+#include "math/VectorM.hh"
+#include "AbstractElement2D.hh"
+#include "KinematicState2D.hh"
+
+class Particle2D : public AbstractElement2D
 {
 public:
     /**

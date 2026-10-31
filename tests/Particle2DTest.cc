@@ -2,8 +2,8 @@
 #include <string>
 
 #include "math/VectorM.hh"
-#include "physics/KinematicState2D.hh"
-#include "physics/Particle2D.hh"
+#include "../include/physics/2D/KinematicState2D.hh"
+#include "../include/physics/2D/Particle2D.hh"
 
 static void test_particle2d_constructor()
 {
@@ -92,6 +92,8 @@ static void test_set_particle2d_name()
     assert(particle.get_name()=="particle_2");
     assert(!particle.get_name().empty());
 }
+
+
 
 int main()
 {
