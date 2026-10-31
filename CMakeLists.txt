@@ -1,16 +1,33 @@
 cmake_minimum_required(VERSION 3.28.3)
 
-project(PhysicsEngine)
+project(PhysicsEngine LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 # Main entrypoint
-add_executable(Entry
+add_executable(entry
         src/main.cc
 )
 
-target_include_directories(Entry PRIVATE include)
-
+target_include_directories(entry PRIVATE include)
 
 # Test Library
 include(CTest)
 
 add_subdirectory(tests)
+
+# External Dependencies
+
+#tomlplusplus
+include(FetchContent)
+FetchContent_Declare(
+        tomlplusplus
+        GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
+        GIT_TAG v3.4.0
+)
+FetchContent_MakeAvailable(tomlplusplus)
+
+target_link_libraries(entry PRIVATE tomlplusplus::tomlplusplus)

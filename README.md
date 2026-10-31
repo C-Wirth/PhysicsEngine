@@ -13,3 +13,9 @@ How to Test
 ```
 ctest --test-dir build --output-on-failure
 ```
+
+
+How to reset cache
+```
+File → Invalidate Caches... → Invalidate and Restart
+```

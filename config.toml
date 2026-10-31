@@ -1,0 +1,14 @@
+[Simulation]
+step_rate_hz = 60.0
+
+[Particle2D]
+
+[Particle2D.particle1]
+acceleration = [0.0, 0.0]
+velocity = [-1.0, -1.0]
+position = [0.0, 0.0]
+
+[Particle2D.particle2]
+acceleration = [0.0, 0.0]
+velocity = [1.0, 1.0]
+position = [1.0, 1.0]

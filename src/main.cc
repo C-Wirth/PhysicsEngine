@@ -1,14 +1,12 @@
 #include <iostream>
 
-#include "math/VectorM.hh"
+#include "simulation/WorldSim.hh"
+#include <toml++/toml.hpp>
 
 auto main() -> int
 {
-    std::array<double, 3> a = {1.0, 2.0, 3.0};
-    VectorM<3> v1(a);
-    VectorM<3> v2{};
+    const WorldSim world_sim;
 
-    VectorM<3> v3 = v1 + v1;
+    std::cout<< world_sim << "\n";
 
-    return 0;
 }
