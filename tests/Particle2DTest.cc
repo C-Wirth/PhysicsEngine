@@ -12,7 +12,7 @@ static void test_particle2d_constructor()
     VectorM<2> p = VectorM<2>(std::array<double, 2>{2, 2});
 
     const KinematicState2D ks_2d{.acceleration = a, .velocity = v, .position = p};
-    const Particle2D particle(ks_2d, std::string("particle1"));
+    Particle2D particle("particle1", ks_2d);
 
     assert(particle.get_acceleration()==a);
     assert(particle.get_acceleration()!=v);
@@ -33,7 +33,7 @@ static void test_set_ks2d_values()
     const auto v2 = VectorM<2>(std::array<double, 2>{1, 1});
 
     constexpr KinematicState2D ks_2d{};
-    Particle2D particle(ks_2d, std::string("particle1"));
+    Particle2D particle("particle1", ks_2d);
 
     assert(particle.get_acceleration()==v1);
     assert(particle.get_velocity()==v1);
@@ -66,7 +66,7 @@ static void test_get_particle2d_name()
 
     const KinematicState2D ks_2d{.acceleration = a, .velocity = v, .position = p};
 
-    const Particle2D particle(ks_2d, name);
+    Particle2D particle(name, ks_2d);
 
     assert(particle.get_name()=="particle_1");
     assert(particle.get_name()!="particle_2");
@@ -84,7 +84,7 @@ static void test_set_particle2d_name()
 
     const KinematicState2D ks_2d{.acceleration = a, .velocity = v, .position = p};
 
-    Particle2D particle(ks_2d, name);
+    Particle2D particle(name, ks_2d);
     particle.set_name("particle_2");
 
 

@@ -1,27 +1,27 @@
+#pragma once
+
+#include <vector>
+
+#include "physics/2D/AbstractElement2D.hh"
 #include "AbstractForce2D.hh"
+#include "math/VectorM.hh"
 
 class AppliedForce2D : public AbstractForce2D
 {
 public:
-    AppliedForce2D()
+    /**
+     * Constructor
+     * @param force the force vector
+     */
+    explicit AppliedForce2D(const VectorM<2> force)
+        : force_(force)
     {
     }
 
     auto applyForce(AbstractElement2D& element) -> void override
     {
-    #TODO implement me
-
-    #  TODO define forces in the toml file like:
-        /**
-         * [[ AppliedForces2D ]]
-         * name <string>
-         * force (N) [x, y]
-         * particles [p1, p2 , ...]
-         * duration <double>
-         * start_times [t1, t2, ...]
-         */
-
     }
 
 private:
+    VectorM<2> force_; // Newtons: Kg m/s^2
 };

@@ -321,8 +321,6 @@ static void test_vector_cross_product()
     const auto result = v1.cross(v2);
 
     assert(result==3.0);
-
-
 }
 
 

@@ -11,10 +11,12 @@ class Particle2D : public AbstractElement2D
 public:
     /**
      * constructor for Particle2D with initialized KinematicState2D
-     * @param ks_2d
+     * @param name the string name of the Particle
+     * @param ks_2d the Kinematic State.
      */
-    explicit Particle2D(const KinematicState2D& ks_2d, const std::string name)
-        : ks_2d_(ks_2d), name_(name)
+    explicit Particle2D(const std::string& name, const KinematicState2D& ks_2d)
+        : AbstractElement2D(name), ks_2d_(ks_2d)
+
     {
     }
 
@@ -73,25 +75,6 @@ public:
         return ks_2d_.position;
     }
 
-    /**
-     *  retrieve the Particle2D's name
-     * @return std::string name_
-     */
-    [[nodiscard]] auto get_name() const -> std::string
-    {
-        return name_;
-    }
-
-    /**
-     * set the particle 2D's name after construction
-     * @param name std::string
-     */
-    auto set_name(const std::string& name) -> void
-    {
-        name_ = name;
-    }
-
 private:
     KinematicState2D ks_2d_;
-    std::string name_;
 };

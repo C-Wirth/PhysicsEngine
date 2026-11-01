@@ -4,6 +4,5 @@
 auto main() -> int
 {
     const WorldSim world_sim;
-
-    std::cout << world_sim << "\n";
+    std::cout << world_sim;
 }

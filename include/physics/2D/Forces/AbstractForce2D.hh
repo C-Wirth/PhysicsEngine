@@ -9,7 +9,7 @@ public:
     /**
      * Abstract constructor to be overwritten
      */
-    explicit AbstractForce2D();
+    //explicit AbstractForce2D();
     virtual ~AbstractForce2D() = default;
 
     /**
@@ -18,6 +18,6 @@ public:
      * Every child class must implement this function
      * @param element
      */
-    virtual auto applyForce(AbstractElement2D& element) -> void;
+    virtual auto applyForce(AbstractElement2D& element) -> void = 0;
 
 };

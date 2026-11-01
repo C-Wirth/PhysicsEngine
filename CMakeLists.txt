@@ -15,11 +15,6 @@ add_executable(entry
 
 target_include_directories(entry PRIVATE include)
 
-# Test Library
-include(CTest)
-
-add_subdirectory(tests)
-
 # External Dependencies
 
 #tomlplusplus
@@ -32,3 +27,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tomlplusplus)
 
 target_link_libraries(entry PRIVATE tomlplusplus::tomlplusplus)
+
+# Test Library
+include(CTest)
+add_subdirectory(tests)
