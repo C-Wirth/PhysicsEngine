@@ -37,7 +37,7 @@ public:
     struct ElementEntry
     {
         std::string name;
-        std::unique_ptr<AbstractElement2D> element2_d;
+        std::unique_ptr<AbstractElement2D> element_2d;
     };
 
 
@@ -53,7 +53,6 @@ public:
     };
 
 
-    double step_rate_hz{};
     std::vector<std::unique_ptr<ElementEntry>> elements_2d;
     std::vector<ScheduledForce> appliedForceSchedule{};
 
@@ -66,7 +65,14 @@ public:
     /**
      * Constructor that takes a toml table.  Currently used for testing
      */
-    WorldSim(toml::v3::table);
+    explicit WorldSim(toml::v3::table);
+
+
+    /**
+     * accessor for time_step_s
+     * @return double time_step_s
+     */
+    [[nodiscard]] auto getTimeStepS() const -> double { return time_step_s; }
 
     /**
      * core logic for a step in the simulation
@@ -85,5 +91,14 @@ private:
      */
     auto parse_config_table() -> void;
 
+    /**
+     * helper function to stepSimulation
+     */
+    auto determine_forces() -> void;
+
     toml::table config_;
+
+    double time_step_s{};
+
+    double current_time_s = 0.0;
 };

@@ -41,6 +41,11 @@ public:
         accumulatedForces_[1] = 0;
     }
 
+    [[nodiscard]] auto getAccumulatedForces() const -> const VectorM<2>&
+    {
+        return accumulatedForces_;
+    }
+
     [[nodiscard]] auto get_name() const -> const std::string&
     {
         return name_;

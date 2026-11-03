@@ -20,6 +20,7 @@ public:
 
     auto applyForce(AbstractElement2D& element) -> void override
     {
+        element.accumulateForce(force_);
     }
 
 private:

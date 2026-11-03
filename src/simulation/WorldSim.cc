@@ -3,6 +3,7 @@
 #include <ostream>
 #include <sstream>
 #include <array>
+#include <cstddef>
 #include <stdexcept>
 
 #include <toml++/toml.hpp>
@@ -39,7 +40,10 @@ auto WorldSim::parse_config_table() -> void
     const auto* simulation = config_[SIMULATION_HEADER].as_table();
     if (!simulation)
         throw std::runtime_error("Simulation entry must be a table");
-    step_rate_hz = (*simulation)["step_rate_hz"].value<double>().value();
+    const double step_rate_hz = (*simulation)["step_rate_hz"].value<double>().value();
+    if (step_rate_hz <= 0.0)
+        throw std::runtime_error("Simulation step_rate_hz must be greater than zero");
+    time_step_s = 1.0 / step_rate_hz;
 
 
     // particle2Ds
@@ -75,7 +79,7 @@ auto WorldSim::parse_config_table() -> void
         auto element_name = std::string{name};
         elements_2d.emplace_back(std::make_unique<ElementEntry>(ElementEntry{
             .name = element_name,
-            .element2_d = std::move(std::make_unique<Particle2D>(element_name, state))
+            .element_2d = std::move(std::make_unique<Particle2D>(element_name, state))
         }));
     });
 
@@ -131,6 +135,51 @@ auto WorldSim::parse_config_table() -> void
     });
 }
 
+auto WorldSim::determine_forces() -> void
+{
+    std::size_t idx = 0;
+    while (idx < appliedForceSchedule.size())
+    {
+        // ReSharper disable once CppUseStructuredBinding
+        auto& scheduled_force = appliedForceSchedule[idx];
+
+        if (current_time_s < scheduled_force.timestamp)
+        {
+            ++idx;
+            continue;
+        }
+
+        const bool is_instant_force = scheduled_force.duration == 0.0;
+
+        const bool duration_has_ended =
+            !is_instant_force && current_time_s >= scheduled_force.timestamp + scheduled_force.duration;
+
+        if (duration_has_ended)
+        {
+            appliedForceSchedule.erase(appliedForceSchedule.begin() + static_cast<std::ptrdiff_t>(idx));
+            continue;
+        }
+
+        for (const auto& element_entry : elements_2d)
+        {
+            if (element_entry &&
+                element_entry->name == scheduled_force.target_element_name &&
+                element_entry->element_2d)
+            {
+                scheduled_force.force.applyForce(*element_entry->element_2d);
+                break;
+            }
+        }
+
+        if (is_instant_force)
+        {
+            appliedForceSchedule.erase(appliedForceSchedule.begin() + static_cast<std::ptrdiff_t>(idx));
+            continue;
+        }
+
+        ++idx;
+    }
+}
 
 /**
  * steps the simulator forward at step_rate
@@ -139,12 +188,12 @@ auto WorldSim::parse_config_table() -> void
 auto WorldSim::stepSimulation() -> void
 {
 
-    return;
-
-    // TODO Implement Parsing Logic for just Forces
 
     // TODO Implement me
-    // 1. determine forces O(E * F) where E=Elements and F=Forces
+    // 1. determine forces
+    determine_forces();
+    //
+
 
     // 2. accumulate forces
 
@@ -153,6 +202,7 @@ auto WorldSim::stepSimulation() -> void
     // 4. run numerical integrator
 
     // 5. update state
+    current_time_s += time_step_s;
 
     // 6. continue
 }
