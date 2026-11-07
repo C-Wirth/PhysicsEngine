@@ -10,6 +10,7 @@
 
 #include "physics/2D/AbstractElement2D.hh"
 #include "physics/2D/Forces/AppliedForce2D.hh"
+#include "physics/2D/Forces/AbstractForce2D.hh"
 
 inline std::string CONFIG_PATH = "config.toml";
 
@@ -43,6 +44,7 @@ public:
 
     /**
      * The Force entry in the Force Schedule
+     * These are determined at Compile time as they are determined by the config directly
      */
     struct ScheduledForce
     {
@@ -55,6 +57,22 @@ public:
 
     std::vector<std::unique_ptr<ElementEntry>> elements_2d;
     std::vector<ScheduledForce> appliedForceSchedule{};
+
+    /**
+     * Forces with their target element that have been determined at a single Iteration
+     *
+     */
+    struct DeterminedForce
+    {
+        std::string target_element_name;
+        std::unique_ptr<AbstractForce2D> force;
+    };
+
+    /**
+     * What the currently determined forces are.
+     * Is reset on every step
+     */
+    std::vector<DeterminedForce> determined_forces;
 
 
     /**
@@ -86,6 +104,9 @@ public:
     friend auto operator<<(std::ostream&, const WorldSim&) -> std::ostream&;
 
 private:
+    // used for testing
+    friend class WorldSimTestAccess;
+
     /**
      * helper function to parse a config file
      */

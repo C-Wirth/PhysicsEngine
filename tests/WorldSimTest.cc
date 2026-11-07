@@ -5,6 +5,22 @@
 
 #include "simulation/WorldSim.hh"
 
+class WorldSimTestAccess
+{
+public:
+    static auto SetCurrentTime(WorldSim& sim, const double time_s, const bool step_simulation) -> void
+    {
+        sim.current_time_s = time_s;
+        if (step_simulation)
+            sim.stepSimulation();
+    }
+
+    static auto determine_forces(WorldSim& sim) -> void
+    {
+        sim.determine_forces();
+    }
+};
+
 static auto test_parse_config_table() -> void
 {
     toml::table config_table{
@@ -102,26 +118,28 @@ static auto test_determine_forces() -> void
 
         assert(sim.appliedForceSchedule.size() == 2);
 
-        // t_0 : time = 0.0 seconds
-        // applied once and removed; the one-second force also starts applying.
-        sim.stepSimulation();
+        // At t = 0, both scheduled forces are determined.
+        WorldSimTestAccess::SetCurrentTime(sim, 0.0, false);
+        WorldSimTestAccess::determine_forces(sim);
+        assert(sim.determined_forces.size() == 2);
+        assert(sim.determined_forces[0].target_element_name == "particle1");
+        assert(sim.determined_forces[0].force);
+        assert(sim.determined_forces[1].target_element_name == "particle1");
+        assert(sim.determined_forces[1].force);
         assert(sim.appliedForceSchedule.size() == 1);
         assert(sim.appliedForceSchedule[0].timestamp == 0.0);
 
-        // t_1 : time = 1/60 seconds
-        sim.stepSimulation();
+        // At t = 0.5, the duration force remains active.
+        WorldSimTestAccess::SetCurrentTime(sim, 0.5, false);
+        WorldSimTestAccess::determine_forces(sim);
+        assert(sim.determined_forces.size() == 1);
+        assert(sim.determined_forces[0].target_element_name == "particle1");
         assert(sim.appliedForceSchedule.size() == 1);
-        assert(sim.elements_2d[0]->element_2d->getAccumulatedForces()[0] == 3.0);
 
-        // Complete 60 steps total. The final force evaluation is at t = 59/60 s.
-        for (auto idx = 2; idx < 60; idx++)
-        {
-            sim.stepSimulation();
-            assert(sim.appliedForceSchedule.size() == 1);
-        }
-
-        // Step 61 evaluates forces at t = 1 second, so the force expires.
-        sim.stepSimulation();
+        // At t = 1, the duration force has ended and is removed.
+        WorldSimTestAccess::SetCurrentTime(sim, 1.0, false);
+        WorldSimTestAccess::determine_forces(sim);
+        assert(sim.determined_forces.empty());
         assert(sim.appliedForceSchedule.empty());
     }
 }

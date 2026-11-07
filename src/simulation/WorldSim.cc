@@ -135,14 +135,23 @@ auto WorldSim::parse_config_table() -> void
     });
 }
 
+/**
+ * used once every WorldSim::step() to determine all active forces
+ */
 auto WorldSim::determine_forces() -> void
 {
+    //  ensure that the determined_forces vector is empty
+    determined_forces.clear();
+
     std::size_t idx = 0;
+
+    // this logic steps through the schedule of predefined applied forces
     while (idx < appliedForceSchedule.size())
     {
         // ReSharper disable once CppUseStructuredBinding
         auto& scheduled_force = appliedForceSchedule[idx];
 
+        // we have not yet reached the time to
         if (current_time_s < scheduled_force.timestamp)
         {
             ++idx;
@@ -166,7 +175,10 @@ auto WorldSim::determine_forces() -> void
                 element_entry->name == scheduled_force.target_element_name &&
                 element_entry->element_2d)
             {
-                scheduled_force.force.applyForce(*element_entry->element_2d);
+                determined_forces.push_back(DeterminedForce{
+                    .target_element_name = scheduled_force.target_element_name,
+                    .force = std::make_unique<AppliedForce2D>(scheduled_force.force)
+                });
                 break;
             }
         }
@@ -179,6 +191,8 @@ auto WorldSim::determine_forces() -> void
 
         ++idx;
     }
+
+    // TODO apply non-scheduled Forces
 }
 
 /**
@@ -187,22 +201,20 @@ auto WorldSim::determine_forces() -> void
  */
 auto WorldSim::stepSimulation() -> void
 {
+    // 1. determine forces
+    determine_forces();
 
 
     // TODO Implement me
-    // 1. determine forces
-    determine_forces();
-    //
-
-
     // 2. accumulate forces
 
     // 3. calculate acceleration
 
     // 4. run numerical integrator
 
-    // 5. update state
+    // 5. update state and reset accumulators
     current_time_s += time_step_s;
+
 
     // 6. continue
 }
