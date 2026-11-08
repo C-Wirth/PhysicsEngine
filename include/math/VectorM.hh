@@ -202,7 +202,7 @@ public:
      */
     auto operator*(double d) -> VectorM
     {
-        VectorM<3> v{};
+        VectorM<N> v{};
         for (std::size_t idx = 0; idx < N; idx++)
         {
             v[idx] = (*this)[idx] * d;
@@ -217,7 +217,7 @@ public:
      */
     auto operator/(double d) -> VectorM
     {
-        VectorM<3> v{};
+        VectorM<N> v{};
         for (std::size_t idx = 0; idx < N; idx++)
         {
             v[idx] = (*this)[idx] / d;

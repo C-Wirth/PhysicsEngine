@@ -9,6 +9,10 @@
 #include <toml++/toml.hpp>
 
 #include "simulation/WorldSim.hh"
+
+#include <ranges>
+
+#include "math/Integrator.hh"
 #include "physics/2D/KinematicState2D.hh"
 #include "physics/2D/AbstractElement2D.hh"
 #include "physics/2D/Particle2D.hh"
@@ -40,6 +44,12 @@ auto WorldSim::parse_config_table() -> void
     const auto* simulation = config_[SIMULATION_HEADER].as_table();
     if (!simulation)
         throw std::runtime_error("Simulation entry must be a table");
+
+    const auto integrator_name = (*simulation)["integrator"].value<std::string>();
+    if (!integrator_name)
+        throw std::runtime_error("Simulation integrator not recognized");
+    Integrator::getInstance().setIntegrator(*integrator_name);
+
     const double step_rate_hz = (*simulation)["step_rate_hz"].value<double>().value();
     if (step_rate_hz <= 0.0)
         throw std::runtime_error("Simulation step_rate_hz must be greater than zero");
@@ -76,8 +86,13 @@ auto WorldSim::parse_config_table() -> void
 
         KinematicState2D state{.acceleration = acceleration, .velocity = velocity, .position = position};
 
+        const auto mass = (*particle)[MASS_VALUE].value<double>();
+        if (!mass)
+            throw std::runtime_error("Particle2D mass must be a number");
+
+
         auto element_name = std::string{name};
-        elements_2d.emplace(element_name, std::make_unique<Particle2D>(element_name, state));
+        elements_2d.emplace(element_name, std::make_unique<Particle2D>(element_name, state, *mass));
     });
 
     // applied forces
@@ -195,38 +210,55 @@ auto WorldSim::accumulate_forces() -> void
         const auto target_element = elements_2d.find(determined_force.target_element_name);
         if (target_element == elements_2d.end() ||
             !target_element->second ||
-            !determined_force.force)
+            !determined_force.force
+        )
         {
             continue;
         }
 
         determined_force.force->applyForce(*target_element->second);
     }
+}
 
+
+auto WorldSim::calculate_acceleration() -> void
+{
+    for (const auto& element : elements_2d | std::views::values)
+    {
+        element->set_acceleration(element->getAccumulatedForces() / element->get_mass());
+    }
+}
+
+
+auto WorldSim::integrate() -> void
+{
+
+    for (const auto& e : elements_2d | std::views::values)
+    {
+        Integrator::getInstance().stepIntegrator(*e, time_step_s);
+    }
 }
 
 /**
  * steps the simulator forward at step_rate
+ * 1. determine forces
+ * 2. accumulate forces
+ * 3. calculate acceleration
+ * 4. integrate
+ * 5. update state and reset accumulators
  *
  */
 auto WorldSim::stepSimulation() -> void
 {
-    // 1. determine forces
     determine_forces();
-
-
-    // 2. accumulate forces
     accumulate_forces();
+    calculate_acceleration();
+    integrate();
 
-    // 3. calculate acceleration
 
     // 4. run numerical integrator
-
     // 5. update state and reset accumulators
     current_time_s += time_step_s;
-
-
-    // 6. continue
 }
 
 /**

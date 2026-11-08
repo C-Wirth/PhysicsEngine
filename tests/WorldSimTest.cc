@@ -26,7 +26,8 @@ static auto test_parse_config_table() -> void
     toml::table config_table{
         {
             "Simulation", toml::table{
-                {"step_rate_hz", 60.0}
+                {"step_rate_hz", 60.0},
+                {"integrator", "Euler"}
             }
         },
         {
@@ -35,14 +36,16 @@ static auto test_parse_config_table() -> void
                     "particle1", toml::table{
                         {"acceleration", toml::array{0.0, 0.0}},
                         {"velocity", toml::array{-1.0, -1.0}},
-                        {"position", toml::array{0.0, 0.0}}
+                        {"position", toml::array{0.0, 0.0}},
+                        {"mass", 1.0},
                     }
                 },
                 {
                     "particle2", toml::table{
                         {"acceleration", toml::array{0.0, 0.0}},
                         {"velocity", toml::array{1.0, 1.0}},
-                        {"position", toml::array{1.0, 1.0}}
+                        {"position", toml::array{1.0, 1.0}},
+                        {"mass", 2.0},
                     }
                 }
             }
@@ -82,7 +85,8 @@ static auto test_determine_forces() -> void
         toml::table config_table{
             {
                 "Simulation", toml::table{
-                    {"step_rate_hz", 60.0}
+                    {"step_rate_hz", 60.0},
+                    {"integrator", "Euler"}
                 }
             },
             {
@@ -91,7 +95,8 @@ static auto test_determine_forces() -> void
                         "particle1", toml::table{
                             {"acceleration", toml::array{0.0, 0.0}},
                             {"velocity", toml::array{-1.0, -1.0}},
-                            {"position", toml::array{0.0, 0.0}}
+                            {"position", toml::array{0.0, 0.0}},
+                            {"mass", 2.0},
                         }
                     }
                 }

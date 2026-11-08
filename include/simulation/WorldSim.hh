@@ -9,6 +9,8 @@
 
 #include <toml++/toml.hpp>
 
+#include "math/Integrator.hh"
+
 #include "physics/2D/AbstractElement2D.hh"
 #include "physics/2D/Forces/AppliedForce2D.hh"
 #include "physics/2D/Forces/AbstractForce2D.hh"
@@ -17,11 +19,13 @@ inline std::string CONFIG_PATH = "config.toml";
 
 inline std::string SIMULATION_HEADER = "Simulation";
 inline std::string STEP_RATE_HZ = "step_rate_hz";
+inline std::array<std::string, 3> INTEGRATORS{"Euler", "Advanced Euler", "RK4"};
 
 inline std::string PARTICLE_2D_HEADER = "Particle2D";
 inline std::string ACCELERATION_2D_VECTOR = "acceleration";
 inline std::string VELOCITY_2D_VECTOR = "velocity";
 inline std::string POSITION_2D_VECTOR = "position";
+inline std::string MASS_VALUE = "mass";
 
 
 inline std::string APPLIED_FORCE_2D_HEADER = "AppliedForce2D";
@@ -33,7 +37,6 @@ inline std::string APPLIED_FORCE_2D_START_AND_DURATION_PAIRS = "start_and_durati
 class WorldSim
 {
 public:
-
     /**
      * The entry in the Element lookup table
      */
@@ -118,6 +121,16 @@ private:
      * helper function for stepSimulation
      */
     auto accumulate_forces() -> void;
+
+    /**
+     * helper function for stepSimulation
+     */
+    auto calculate_acceleration() -> void;
+
+    /**
+     * helper function for stepSimulation
+     */
+    auto integrate() -> void;
 
     toml::table config_;
 
