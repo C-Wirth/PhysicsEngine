@@ -3,6 +3,7 @@
 #include <ostream>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 
@@ -32,14 +33,11 @@ inline std::string APPLIED_FORCE_2D_START_AND_DURATION_PAIRS = "start_and_durati
 class WorldSim
 {
 public:
+
     /**
-     * The an entry in the Element lookup table
+     * The entry in the Element lookup table
      */
-    struct ElementEntry
-    {
-        std::string name;
-        std::unique_ptr<AbstractElement2D> element_2d;
-    };
+    std::unordered_map<std::string, std::unique_ptr<AbstractElement2D>> elements_2d;
 
 
     /**
@@ -55,7 +53,6 @@ public:
     };
 
 
-    std::vector<std::unique_ptr<ElementEntry>> elements_2d;
     std::vector<ScheduledForce> appliedForceSchedule{};
 
     /**
@@ -116,6 +113,11 @@ private:
      * helper function to stepSimulation
      */
     auto determine_forces() -> void;
+
+    /**
+     * helper function for stepSimulation
+     */
+    auto accumulate_forces() -> void;
 
     toml::table config_;
 

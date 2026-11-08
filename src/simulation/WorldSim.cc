@@ -77,10 +77,7 @@ auto WorldSim::parse_config_table() -> void
         KinematicState2D state{.acceleration = acceleration, .velocity = velocity, .position = position};
 
         auto element_name = std::string{name};
-        elements_2d.emplace_back(std::make_unique<ElementEntry>(ElementEntry{
-            .name = element_name,
-            .element_2d = std::move(std::make_unique<Particle2D>(element_name, state))
-        }));
+        elements_2d.emplace(element_name, std::make_unique<Particle2D>(element_name, state));
     });
 
     // applied forces
@@ -169,18 +166,13 @@ auto WorldSim::determine_forces() -> void
             continue;
         }
 
-        for (const auto& element_entry : elements_2d)
+        const auto target_element = elements_2d.find(scheduled_force.target_element_name);
+        if (target_element != elements_2d.end() && target_element->second)
         {
-            if (element_entry &&
-                element_entry->name == scheduled_force.target_element_name &&
-                element_entry->element_2d)
-            {
-                determined_forces.push_back(DeterminedForce{
-                    .target_element_name = scheduled_force.target_element_name,
-                    .force = std::make_unique<AppliedForce2D>(scheduled_force.force)
-                });
-                break;
-            }
+            determined_forces.push_back(DeterminedForce{
+                .target_element_name = scheduled_force.target_element_name,
+                .force = std::make_unique<AppliedForce2D>(scheduled_force.force)
+            });
         }
 
         if (is_instant_force)
@@ -195,6 +187,24 @@ auto WorldSim::determine_forces() -> void
     // TODO apply non-scheduled Forces
 }
 
+
+auto WorldSim::accumulate_forces() -> void
+{
+    for (auto& determined_force : determined_forces)
+    {
+        const auto target_element = elements_2d.find(determined_force.target_element_name);
+        if (target_element == elements_2d.end() ||
+            !target_element->second ||
+            !determined_force.force)
+        {
+            continue;
+        }
+
+        determined_force.force->applyForce(*target_element->second);
+    }
+
+}
+
 /**
  * steps the simulator forward at step_rate
  *
@@ -205,8 +215,8 @@ auto WorldSim::stepSimulation() -> void
     determine_forces();
 
 
-    // TODO Implement me
     // 2. accumulate forces
+    accumulate_forces();
 
     // 3. calculate acceleration
 
