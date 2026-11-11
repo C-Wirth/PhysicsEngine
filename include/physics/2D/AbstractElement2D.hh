@@ -55,6 +55,16 @@ public:
         return kinematic_state_.position;
     }
 
+    [[nodiscard]] auto get_kinematic_state() -> KinematicState2D&
+    {
+        return kinematic_state_;
+    }
+
+    [[nodiscard]] auto get_kinematic_state() const -> const KinematicState2D&
+    {
+        return kinematic_state_;
+    }
+
     [[nodiscard]] auto get_mass() const -> double
     {
         return mass_;

@@ -132,6 +132,12 @@ private:
      */
     auto integrate() -> void;
 
+
+    /**
+     * helper function for stepSimulation
+     */
+    auto reset_accumulators() -> void;
+
     toml::table config_;
 
     double time_step_s{};

@@ -235,8 +235,18 @@ auto WorldSim::integrate() -> void
 
     for (const auto& e : elements_2d | std::views::values)
     {
-        Integrator::getInstance().stepIntegrator(*e, time_step_s);
+        Integrator::getInstance().stepIntegrator(e->get_kinematic_state(), time_step_s);
     }
+}
+
+
+auto WorldSim::reset_accumulators() -> void
+{
+    for (const auto& e : elements_2d | std::views::values)
+    {
+        e->resetAccumulatedForces();
+    }
+
 }
 
 /**
@@ -254,11 +264,9 @@ auto WorldSim::stepSimulation() -> void
     accumulate_forces();
     calculate_acceleration();
     integrate();
-
-
-    // 4. run numerical integrator
-    // 5. update state and reset accumulators
+    reset_accumulators();
     current_time_s += time_step_s;
+
 }
 
 /**

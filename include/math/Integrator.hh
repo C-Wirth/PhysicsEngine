@@ -4,10 +4,10 @@
 #include <string>
 #include <string_view>
 
-#include "physics/2D/AbstractElement2D.hh"
+#include "physics/2D/KinematicState2D.hh"
 
 /**
- * Integrators Singleton class
+ * Selects and runs the configured integration method.
  */
 class Integrator
 {
@@ -15,11 +15,7 @@ public:
     Integrator(const Integrator&) = delete;
     Integrator& operator=(const Integrator&) = delete;
 
-    /**
-     * Retrieve the Singleton Integrator
-     * @return
-     */
-    static Integrator& getInstance()
+    static auto getInstance() -> Integrator&
     {
         static Integrator instance;
         return instance;
@@ -29,41 +25,44 @@ public:
     {
         if (name == "Euler")
             step_function_ = &Integrator::EulerStep;
-        else if (name == "Advanced Euler")
-            step_function_ = &Integrator::AdvancedEulerStep;
+        else if (name == "Improved Euler")
+            step_function_ = &Integrator::ImprovedEulerStep;
         else if (name == "RK4")
             step_function_ = &Integrator::RK4Step;
         else
             throw std::invalid_argument("Unknown integrator: " + std::string{name});
     }
 
-    // TODO Implement me
-    auto stepIntegrator(AbstractElement2D& element, double dt) -> void
+    auto stepIntegrator(KinematicState2D& state, const double dt) const -> void
     {
-        (this->*step_function_)(element, dt);
+        step_function_(state, dt);
     }
 
-    // TODO Implement me
-    auto EulerStep(AbstractElement2D& element, double dt) -> void
+    static auto EulerStep(KinematicState2D& state, const double dt) -> void
     {
+        state.velocity = state.velocity + state.acceleration * dt;;
+        state.position = state.position + state.velocity * dt;
     }
 
-    // TODO Implement me
-    auto AdvancedEulerStep(AbstractElement2D& element, double dt) -> void
+    static auto ImprovedEulerStep(KinematicState2D& state, const double dt) -> void
     {
+        const auto velocity_next = state.velocity + state.acceleration * dt;
+        VectorM<2> average_velocity = (state.velocity + velocity_next) * 0.5;
+        const auto position_next = state.position + average_velocity * dt;
+
+        state.velocity = velocity_next;
+        state.position = position_next;
     }
 
-    // TODO Implement me
-    auto RK4Step(AbstractElement2D& element, double dt) -> void
+    static auto RK4Step(KinematicState2D&, double) -> void
     {
+        // TODO Implement RK4.
     }
 
 private:
-    using StepFunction = void (Integrator::*)(AbstractElement2D&, double);
+    using StepFunction = void (*)(KinematicState2D&, double);
 
-    Integrator()
-    {
-    }
+    Integrator() = default;
 
     StepFunction step_function_{&Integrator::EulerStep};
 };
