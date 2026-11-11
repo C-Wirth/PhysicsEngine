@@ -24,7 +24,7 @@ public:
     auto setIntegrator(const std::string_view name) -> void
     {
         if (name == "Euler")
-            step_function_ = &Integrator::EulerStep;
+            step_function_ = &Integrator::SemiImplicitEulerStep;
         else if (name == "Improved Euler")
             step_function_ = &Integrator::ImprovedEulerStep;
         else if (name == "RK4")
@@ -38,7 +38,7 @@ public:
         step_function_(state, dt);
     }
 
-    static auto EulerStep(KinematicState2D& state, const double dt) -> void
+    static auto SemiImplicitEulerStep(KinematicState2D& state, const double dt) -> void
     {
         state.velocity = state.velocity + state.acceleration * dt;;
         state.position = state.position + state.velocity * dt;
@@ -64,5 +64,5 @@ private:
 
     Integrator() = default;
 
-    StepFunction step_function_{&Integrator::EulerStep};
+    StepFunction step_function_{&Integrator::SemiImplicitEulerStep};
 };

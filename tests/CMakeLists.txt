@@ -20,3 +20,7 @@ add_test(NAME WorldSimTest COMMAND WorldSimTest)
 add_executable(IntegratorTest IntegratorTest.cc)
 target_include_directories(IntegratorTest PRIVATE "${PROJECT_SOURCE_DIR}/include")
 add_test(NAME IntegratorTest COMMAND IntegratorTest)
+
+add_executable(MatrixTest MatrixTest.cc)
+target_include_directories(MatrixTest PRIVATE "${PROJECT_SOURCE_DIR}/include")
+add_test(NAME MatrixTest COMMAND MatrixTest)
